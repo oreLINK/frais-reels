@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { Stepper } from './components/layout/Stepper';
+import { LandingPage } from './components/LandingPage';
+import { DocumentChecklist } from './components/DocumentChecklist';
 import { useSimulator } from './hooks/useSimulator';
 
 import { Step1_Revenus } from './components/steps/Step1_Revenus';
@@ -26,6 +28,8 @@ const STEP_COMPONENTS = [
 
 function App() {
   const [state, dispatch] = useSimulator();
+  // 'landing' | 'checklist' | 'simulator'
+  const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNext = () => {
@@ -47,18 +51,28 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
       <Header />
-      <Stepper
-        currentStep={currentStep}
-        totalSteps={STEPS.length}
-        steps={STEPS}
-      />
-      <main className="flex-1 py-6">
-        <CurrentStepComponent
-          state={state}
-          dispatch={dispatch}
-          onNext={currentStep < STEPS.length - 1 ? handleNext : null}
-          onPrev={currentStep > 0 ? handlePrev : null}
+      {screen === 'simulator' && (
+        <Stepper
+          currentStep={currentStep}
+          totalSteps={STEPS.length}
+          steps={STEPS}
         />
+      )}
+      <main className="flex-1 py-6">
+        {screen === 'landing' && (
+          <LandingPage onStart={() => { setScreen('checklist'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+        )}
+        {screen === 'checklist' && (
+          <DocumentChecklist onStart={() => { setScreen('simulator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+        )}
+        {screen === 'simulator' && (
+          <CurrentStepComponent
+            state={state}
+            dispatch={dispatch}
+            onNext={currentStep < STEPS.length - 1 ? handleNext : null}
+            onPrev={currentStep > 0 ? handlePrev : null}
+          />
+        )}
       </main>
       <Footer />
     </div>
