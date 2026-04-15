@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
-      <Header />
+      <Header onHome={() => { setScreen('landing'); setCurrentStep(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
       {screen === 'simulator' && (
         <Stepper
           currentStep={currentStep}

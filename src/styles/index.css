@@ -11,6 +11,11 @@
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
 }
 
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
 * {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -22,6 +27,8 @@ h1, h2, h3 {
 
 body {
   background-color: #f1f5f9;
+  line-height: 1.6;
+  min-height: 100dvh;
 }
 
 /* Animation d'entrée pour les cartes de questions */
