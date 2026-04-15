@@ -170,25 +170,25 @@ function CategoryCard({ cat, defaultOpen = false }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3.5 text-left"
+        className="w-full flex items-center justify-between px-4 sm:px-5 py-4 text-left"
       >
         <div className="flex items-center gap-3">
-          <div className={`w-9 h-9 rounded-xl ${cat.bg} flex items-center justify-center flex-shrink-0`}>
-            <Icon size={18} className={cat.color} />
+          <div className={`w-10 h-10 rounded-xl ${cat.bg} flex items-center justify-center flex-shrink-0`}>
+            <Icon size={20} className={cat.color} />
           </div>
           <div>
-            <p className="font-bold text-gray-800 text-sm leading-tight">{cat.title}</p>
-            <p className="text-xs text-gray-400 mt-0.5">{cat.subtitle}</p>
+            <p className="font-bold text-gray-800 text-base leading-tight">{cat.title}</p>
+            <p className="text-sm text-gray-500 mt-0.5">{cat.subtitle}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 ml-3">
-          <span className="text-xs text-gray-400">{cat.docs.length} doc{cat.docs.length > 1 ? 's' : ''}</span>
-          {open ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+          <span className="text-sm text-gray-500">{cat.docs.length} doc{cat.docs.length > 1 ? 's' : ''}</span>
+          {open ? <ChevronUp size={18} className="text-gray-400" /> : <ChevronDown size={18} className="text-gray-400" />}
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-4 space-y-3 border-t border-gray-50 pt-3">
+        <div className="px-4 sm:px-5 pb-4 space-y-3 border-t border-gray-100 pt-3">
           {required.length > 0 && (
             <div className="space-y-2">
               {required.map((doc, i) => (
@@ -199,7 +199,7 @@ function CategoryCard({ cat, defaultOpen = false }) {
           {optional.length > 0 && (
             <>
               {required.length > 0 && (
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider pt-1">
+                <p className="text-xs sm:text-sm font-semibold text-gray-400 uppercase tracking-wider pt-1">
                   Si applicable
                 </p>
               )}
@@ -218,18 +218,18 @@ function CategoryCard({ cat, defaultOpen = false }) {
 
 function DocItem({ doc, optional = false, accentColor }) {
   return (
-    <div className={`rounded-xl p-3 ${optional ? 'bg-gray-50' : 'bg-white border border-gray-100'}`}>
-      <div className="flex items-start gap-2">
-        <span className={`mt-0.5 flex-shrink-0 text-xs font-bold w-4 h-4 rounded-full flex items-center justify-center ${
+    <div className={`rounded-xl p-3 sm:p-4 ${optional ? 'bg-gray-50' : 'bg-white border border-gray-100'}`}>
+      <div className="flex items-start gap-2.5">
+        <span className={`mt-0.5 flex-shrink-0 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center ${
           optional ? 'bg-gray-200 text-gray-500' : 'bg-navy/10 text-navy'
         }`}>
           {optional ? '?' : '!'}
         </span>
         <div>
-          <p className={`text-xs font-semibold ${optional ? 'text-gray-500' : 'text-gray-700'}`}>
+          <p className={`text-sm font-semibold ${optional ? 'text-gray-500' : 'text-gray-700'}`}>
             {doc.label}
           </p>
-          <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{doc.detail}</p>
+          <p className="text-sm text-gray-500 mt-0.5 leading-relaxed">{doc.detail}</p>
         </div>
       </div>
     </div>
@@ -238,31 +238,31 @@ function DocItem({ doc, optional = false, accentColor }) {
 
 export function DocumentChecklist({ onStart }) {
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
       {/* En-tête */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-display font-bold text-navy mb-2">
+      <div className="mb-7">
+        <h2 className="text-2xl sm:text-3xl font-display font-bold text-navy mb-3">
           Préparez vos documents
         </h2>
-        <p className="text-sm text-gray-500 leading-relaxed">
+        <p className="text-base text-gray-600 leading-relaxed">
           Pour un résultat précis au centime près, ayez ces éléments à portée de main.
           Les sections marquées <span className="font-semibold text-navy">!</span> sont indispensables,
-          les <span className="font-semibold text-gray-400">?</span> sont facultatives selon votre situation.
+          les <span className="font-semibold text-gray-500">?</span> sont facultatives selon votre situation.
         </p>
       </div>
 
       {/* Cards par catégorie */}
-      <div className="space-y-3 mb-6">
+      <div className="space-y-3 mb-7">
         {CATEGORIES.map((cat, i) => (
           <CategoryCard key={cat.id} cat={cat} defaultOpen={i === 0} />
         ))}
       </div>
 
       {/* Conseil */}
-      <div className="bg-navy/5 border border-navy/10 rounded-2xl p-4 mb-6 flex gap-3">
-        <span className="text-navy text-lg flex-shrink-0 mt-0.5">💡</span>
-        <p className="text-xs text-navy/70 leading-relaxed">
+      <div className="bg-navy/5 border border-navy/10 rounded-2xl p-4 sm:p-5 mb-7 flex gap-3">
+        <span className="text-navy text-xl flex-shrink-0 mt-0.5">💡</span>
+        <p className="text-sm sm:text-base text-navy/70 leading-relaxed">
           Vous n'avez pas tout sous la main ? Pas de problème — vous pouvez entrer des
           estimations et ajuster les chiffres plus tard. Le simulateur reste valable même
           avec des données approximatives, mais le résultat sera d'autant plus fiable que
@@ -274,10 +274,10 @@ export function DocumentChecklist({ onStart }) {
       <button
         onClick={onStart}
         type="button"
-        className="w-full flex items-center justify-center gap-2.5 bg-navy text-white py-4 rounded-2xl font-bold text-base hover:bg-blue-900 active:scale-[0.98] transition-all shadow-md"
+        className="w-full flex items-center justify-center gap-2.5 bg-navy text-white py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg hover:bg-blue-900 active:scale-[0.98] transition-all shadow-md"
       >
         Commencer
-        <ArrowRight size={20} />
+        <ArrowRight size={22} />
       </button>
     </div>
   );
