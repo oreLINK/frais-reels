@@ -158,13 +158,30 @@ export function calcSynthese(state) {
   if (state.justif_materiel) fraisSecurisesTotal += materiel.totalMateriel;
   else fraisRisquesTotal += materiel.totalMateriel;
 
-  const superieurAbattement = fraisSecurisesTotal > abattement10.montant;
-  const ecart = Math.abs(fraisSecurisesTotal - abattement10.montant);
+  const fraisReelsTotal = fraisSecurisesTotal + fraisRisquesTotal;
+
+  // Un justificatif manquant = poste > 0 mais case non cochée
+  const allJustifs =
+    (totalTransport === 0 || state.justif_transport) &&
+    (repas.totalNet === 0 || state.justif_repas) &&
+    (logement.totalLogement === 0 || state.justif_logement) &&
+    (materiel.totalMateriel === 0 || state.justif_materiel);
+
+  // Comparaison sur le total réel (tous frais déclarés)
+  const recommendation =
+    fraisReelsTotal <= abattement10.montant
+      ? 'abattement'          // A : abattement plus avantageux
+      : allJustifs
+        ? 'frais_reels'       // B : frais réels + dossier complet
+        : 'abattement_prudence'; // C : frais réels meilleurs mais justifs manquants
+
+  const superieurAbattement = fraisReelsTotal > abattement10.montant;
+  const ecart = Math.abs(fraisReelsTotal - abattement10.montant);
   const verdict = superieurAbattement
     ? `Les frais réels dépassent l'abattement de ${ecart.toLocaleString()} €`
     : `L'abattement 10 % est plus avantageux de ${ecart.toLocaleString()} €`;
 
-  const economie = superieurAbattement ? Math.round(ecart * 0.30) : 0;
+  const economie = recommendation === 'frais_reels' ? Math.round(ecart * 0.30) : 0;
 
   return {
     totalTransport,
@@ -173,7 +190,10 @@ export function calcSynthese(state) {
     totalMateriel: materiel.totalMateriel,
     fraisSecurisesTotal,
     fraisRisquesTotal,
+    fraisReelsTotal,
     abattement10: abattement10.montant,
+    allJustifs,
+    recommendation,
     superieurAbattement,
     verdict,
     economie,

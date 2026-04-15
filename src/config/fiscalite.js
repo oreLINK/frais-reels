@@ -87,7 +87,54 @@ const MATERIEL = {
 };
 
 // -----------------------------------------------------------------------------
-// 6. TEXTES LÉGAUX & AVERTISSEMENTS
+// 6. DATES LIMITES DE DÉCLARATION
+//    Source : impots.gouv.fr – calendrier campagne déclarative
+//    ⚠️  Mettre à jour chaque année en mars quand les dates sont publiées.
+//    Zones internet basées sur le numéro de département du déclarant.
+// -----------------------------------------------------------------------------
+const DATES_LIMITES = {
+  anneeDeclaration: 2026,
+  source: 'impots.gouv.fr – ouverture de la campagne déclarative 2026',
+  note: 'Dates prévisionnelles basées sur le calendrier habituel. À confirmer sur impots.gouv.fr.',
+
+  papier: {
+    label: 'Déclaration papier',
+    departements: 'Tous départements',
+    date: '2026-05-21',
+    dateLabel: '21 mai 2026',
+    description: 'Date de dépôt ou cachet postal faisant foi',
+  },
+
+  internet: [
+    {
+      zone: 1,
+      departements: 'N° 01 à 19 · Non-résidents',
+      departementsRange: [1, 19],
+      departementsSpeciaux: [99],          // 99 = non-résidents
+      date: '2026-05-28',
+      dateLabel: '28 mai 2026',
+    },
+    {
+      zone: 2,
+      departements: 'N° 20 à 54 · Corse (2A, 2B)',
+      departementsRange: [20, 54],
+      departementsSpeciaux: [],            // 2A/2B gérés séparément dans l'UI
+      date: '2026-06-04',
+      dateLabel: '4 juin 2026',
+    },
+    {
+      zone: 3,
+      departements: 'N° 55 à 95 · DOM-TOM (971–976)',
+      departementsRange: [55, 95],
+      departementsSpeciaux: [971, 972, 973, 974, 976],
+      date: '2026-06-11',
+      dateLabel: '11 juin 2026',
+    },
+  ],
+};
+
+// -----------------------------------------------------------------------------
+// 7. TEXTES LÉGAUX & AVERTISSEMENTS
 // -----------------------------------------------------------------------------
 const TEXTES = {
   alerteDistance: `Au-delà de ${LIMITE_DISTANCE_ALLER_KM.valeur} km, vous devez justifier de circonstances particulières (éloignement contraint, absence d'emploi similaire à proximité, scolarisation des enfants…).`,
@@ -113,4 +160,5 @@ export {
   TELETRAVAIL,
   MATERIEL,
   TEXTES,
+  DATES_LIMITES,
 };
