@@ -7,15 +7,15 @@ import { TEXTES, ANNEE_REVENUS } from '../../config/fiscalite';
 
 // ─── Ligne de détail ───────────────────────────────────────────────────────────
 const LIGNE = ({ label, montant, securise, nonZero }) => (
-  <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-    <div className="flex items-center gap-2">
-      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+  <div className="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+    <div className="flex items-center gap-2.5">
+      <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${
         montant === 0 ? 'bg-gray-200' : securise ? 'bg-success' : 'bg-amber-400'
       }`} />
-      <span className="text-sm text-gray-600">{label}</span>
+      <span className="text-sm sm:text-base text-gray-600">{label}</span>
     </div>
-    <span className={`text-sm font-bold ${
-      montant === 0 ? 'text-gray-300' : securise ? 'text-success' : 'text-amber-500'
+    <span className={`text-sm sm:text-base font-bold ${
+      montant === 0 ? 'text-gray-400' : securise ? 'text-success' : 'text-amber-500'
     }`}>
       {montant > 0 ? `${montant.toLocaleString('fr-FR')} €` : '—'}
     </span>
@@ -25,15 +25,15 @@ const LIGNE = ({ label, montant, securise, nonZero }) => (
 // ─── Case à remplir (bloc navy) ────────────────────────────────────────────────
 function CaseDeclaration({ titre, caseCode, montant, note }) {
   return (
-    <div className="bg-navy text-white rounded-2xl p-5 mb-4">
-      <p className="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-1">{titre}</p>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-4xl font-display font-bold">{caseCode}</p>
-          <p className="text-xs text-blue-300 mt-0.5">{note}</p>
+    <div className="bg-navy text-white rounded-2xl p-5 sm:p-6 mb-4">
+      <p className="text-xs sm:text-sm font-semibold text-blue-300 uppercase tracking-wider mb-2">{titre}</p>
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-3xl sm:text-4xl font-display font-bold leading-tight">{caseCode}</p>
+          <p className="text-xs sm:text-sm text-blue-300 mt-1 leading-relaxed">{note}</p>
         </div>
-        <div className="text-right">
-          <p className="text-3xl font-bold tabular-nums">{montant.toLocaleString('fr-FR')} €</p>
+        <div className="text-right flex-shrink-0">
+          <p className="text-2xl sm:text-3xl font-bold tabular-nums">{montant.toLocaleString('fr-FR')} €</p>
         </div>
       </div>
     </div>
@@ -53,23 +53,23 @@ export function Synthese({ state, onPrev }) {
   if (synthese.totalMateriel > 0 && !state.justif_materiel) manquants.push('Matériel');
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
+    <div className="max-w-2xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
 
       {/* Navigation retour */}
       <button
         onClick={onPrev}
         type="button"
-        className="flex items-center gap-1 text-sm text-gray-400 hover:text-navy transition-colors mb-6"
+        className="flex items-center gap-1 text-sm sm:text-base text-gray-500 hover:text-navy transition-colors mb-6"
       >
-        <ChevronLeft size={16} /> Modifier mes réponses
+        <ChevronLeft size={18} /> Modifier mes réponses
       </button>
 
-      <h2 className="text-2xl font-display font-bold text-navy mb-1">Votre synthèse</h2>
-      <p className="text-sm text-gray-500 mb-6">Revenus {ANNEE_REVENUS}</p>
+      <h2 className="text-2xl sm:text-3xl font-display font-bold text-navy mb-1">Votre synthèse</h2>
+      <p className="text-sm sm:text-base text-gray-500 mb-6">Revenus {ANNEE_REVENUS}</p>
 
       {/* ── Jauge comparative ─────────────────────────────────────── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-4">
-        <h3 className="text-xs font-semibold text-navy/60 uppercase tracking-wider mb-3">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 mb-4">
+        <h3 className="text-xs sm:text-sm font-semibold text-navy/60 uppercase tracking-wider mb-3">
           Comparaison des deux options
         </h3>
         <Jauge
@@ -190,8 +190,8 @@ export function Synthese({ state, onPrev }) {
       )}
 
       {/* ── Détail par poste (toujours visible) ─────────────────── */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-4">
-        <h3 className="text-xs font-semibold text-navy/60 uppercase tracking-wider mb-3">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6 mb-4">
+        <h3 className="text-xs sm:text-sm font-semibold text-navy/60 uppercase tracking-wider mb-3">
           Détail de vos frais réels
         </h3>
         <LIGNE label="Transport" montant={synthese.totalTransport} securise={state.justif_transport} />
@@ -199,13 +199,13 @@ export function Synthese({ state, onPrev }) {
         <LIGNE label="Logement / télétravail" montant={synthese.totalLogement} securise={state.justif_logement} />
         <LIGNE label="Matériel & abonnements" montant={synthese.totalMateriel} securise={state.justif_materiel} />
         <div className="flex justify-between pt-3 mt-1">
-          <span className="font-bold text-navy">Total frais réels</span>
-          <span className="font-bold text-navy text-lg">
+          <span className="font-bold text-navy text-base sm:text-lg">Total frais réels</span>
+          <span className="font-bold text-navy text-lg sm:text-xl">
             {fraisReelsTotal.toLocaleString('fr-FR')} €
           </span>
         </div>
         {!allJustifs && synthese.fraisRisquesTotal > 0 && (
-          <p className="text-xs text-amber-600 mt-2 pt-2 border-t border-gray-100">
+          <p className="text-sm text-amber-600 mt-2 pt-2 border-t border-gray-100">
             ⚠ dont {synthese.fraisRisquesTotal.toLocaleString('fr-FR')} € sans justificatifs (indicateurs en orange)
           </p>
         )}
