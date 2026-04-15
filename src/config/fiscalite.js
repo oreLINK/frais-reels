@@ -94,14 +94,19 @@ const MATERIEL = {
 // -----------------------------------------------------------------------------
 const DATES_LIMITES = {
   anneeDeclaration: 2026,
-  source: 'impots.gouv.fr – ouverture de la campagne déclarative 2026',
-  note: 'Dates prévisionnelles basées sur le calendrier habituel. À confirmer sur impots.gouv.fr.',
+  source: 'info.gouv.fr – calendrier campagne déclarative 2026',
+  note: 'Dates officielles publiées par le gouvernement.',
+
+  ouverture: {
+    date: '2026-04-09',
+    dateLabel: '9 avril 2026',
+  },
 
   papier: {
     label: 'Déclaration papier',
     departements: 'Tous départements',
-    date: '2026-05-21',
-    dateLabel: '21 mai 2026',
+    date: '2026-05-19',
+    dateLabel: '19 mai 2026',
     description: 'Date de dépôt ou cachet postal faisant foi',
   },
 
@@ -111,24 +116,24 @@ const DATES_LIMITES = {
       departements: 'N° 01 à 19 · Non-résidents',
       departementsRange: [1, 19],
       departementsSpeciaux: [99],          // 99 = non-résidents
-      date: '2026-05-28',
-      dateLabel: '28 mai 2026',
+      date: '2026-05-21',
+      dateLabel: '21 mai 2026',
     },
     {
       zone: 2,
       departements: 'N° 20 à 54 · Corse (2A, 2B)',
       departementsRange: [20, 54],
       departementsSpeciaux: [],            // 2A/2B gérés séparément dans l'UI
-      date: '2026-06-04',
-      dateLabel: '4 juin 2026',
+      date: '2026-05-28',
+      dateLabel: '28 mai 2026',
     },
     {
       zone: 3,
-      departements: 'N° 55 à 95 · DOM-TOM (971–976)',
+      departements: 'N° 55 à 95 · DOM (971–974, 976)',
       departementsRange: [55, 95],
       departementsSpeciaux: [971, 972, 973, 974, 976],
-      date: '2026-06-11',
-      dateLabel: '11 juin 2026',
+      date: '2026-06-04',
+      dateLabel: '4 juin 2026',
     },
   ],
 };
