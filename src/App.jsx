@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
 import { Stepper } from './components/layout/Stepper';
@@ -31,6 +31,15 @@ function App() {
   // 'landing' | 'checklist' | 'simulator'
   const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    if (window.goatcounter?.count) {
+      window.goatcounter.count({
+        path: screen === 'landing' ? '/frais-reels/' : `/frais-reels/${screen}`,
+        title: screen,
+      });
+    }
+  }, [screen]);
 
   const handleNext = () => {
     if (currentStep < STEPS.length - 1) {
