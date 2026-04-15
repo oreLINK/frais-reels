@@ -5,6 +5,10 @@ import { Stepper } from './components/layout/Stepper';
 import { LandingPage } from './components/LandingPage';
 import { DocumentChecklist } from './components/DocumentChecklist';
 import { useSimulator } from './hooks/useSimulator';
+import { VersionsPage } from './components/VersionsPage';
+import { MentionsLegalesPage } from './components/MentionsLegalesPage';
+import { PolitiqueConfidentialitePage } from './components/PolitiqueConfidentialitePage';
+import { AccessibilitePage } from './components/AccessibilitePage';
 
 import { Step1_Revenus } from './components/steps/Step1_Revenus';
 import { Step2_Deplacements } from './components/steps/Step2_Deplacements';
@@ -28,7 +32,7 @@ const STEP_COMPONENTS = [
 
 function App() {
   const [state, dispatch] = useSimulator();
-  // 'landing' | 'checklist' | 'simulator'
+  // 'landing' | 'checklist' | 'simulator' | 'versions' | 'mentions-legales' | 'confidentialite' | 'accessibilite'
   const [screen, setScreen] = useState('landing');
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -40,6 +44,9 @@ function App() {
       });
     }
   }, [screen]);
+
+  const navigate = (s) => { setScreen(s); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const goHome = () => { setScreen('landing'); setCurrentStep(0); window.scrollTo({ top: 0, behavior: 'smooth' }); };
 
   const handleNext = () => {
     if (currentStep < STEPS.length - 1) {
@@ -59,7 +66,7 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-100">
-      <Header onHome={() => { setScreen('landing'); setCurrentStep(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+      <Header onHome={goHome} />
       {screen === 'simulator' && (
         <Stepper
           currentStep={currentStep}
@@ -69,10 +76,10 @@ function App() {
       )}
       <main className="flex-1 py-6">
         {screen === 'landing' && (
-          <LandingPage onStart={() => { setScreen('checklist'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+          <LandingPage onStart={() => navigate('checklist')} />
         )}
         {screen === 'checklist' && (
-          <DocumentChecklist onStart={() => { setScreen('simulator'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+          <DocumentChecklist onStart={() => navigate('simulator')} />
         )}
         {screen === 'simulator' && (
           <CurrentStepComponent
@@ -82,8 +89,12 @@ function App() {
             onPrev={currentStep > 0 ? handlePrev : null}
           />
         )}
+        {screen === 'versions' && <VersionsPage onHome={goHome} />}
+        {screen === 'mentions-legales' && <MentionsLegalesPage onHome={goHome} />}
+        {screen === 'confidentialite' && <PolitiqueConfidentialitePage onHome={goHome} />}
+        {screen === 'accessibilite' && <AccessibilitePage onHome={goHome} />}
       </main>
-      <Footer />
+      <Footer onNavigate={navigate} />
     </div>
   );
 }

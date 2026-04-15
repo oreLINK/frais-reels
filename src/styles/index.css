@@ -9,6 +9,7 @@
 
   --font-display: 'Merriweather', Georgia, serif;
   --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-logo: 'Pacifico', Georgia, serif;
 }
 
 html {
@@ -52,6 +53,11 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Curseur pointeur sur tous les éléments interactifs */
+button, a, [role="button"] {
+  cursor: pointer;
+}
 
 /* Input number — masquer les flèches */
 input[type=number]::-webkit-inner-spin-button,

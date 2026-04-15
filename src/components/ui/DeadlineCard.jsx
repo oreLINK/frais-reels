@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { DATES_LIMITES } from '../../config/fiscalite';
 
 function daysUntil(dateStr) {
@@ -31,12 +31,16 @@ function getDeptZone(input) {
   return null;
 }
 
-function CountdownBadge({ days }) {
-  if (days < 0) return <span className="text-sm text-gray-500">Passée</span>;
-  if (days === 0) return <span className="text-sm font-bold text-danger">Aujourd'hui !</span>;
-  const color = days <= 7 ? 'text-danger' : days <= 21 ? 'text-amber' : 'text-success';
+function CountdownBadge({ days, large = false }) {
+  if (days < 0) {
+    return <span className={`${large ? 'text-base' : 'text-sm'} text-gray-400 font-medium`}>Passée</span>;
+  }
+  if (days === 0) {
+    return <span className={`${large ? 'text-base' : 'text-sm'} font-bold text-danger`}>Aujourd'hui !</span>;
+  }
+  const color = days <= 7 ? 'text-danger' : days <= 21 ? 'text-amber-500' : 'text-success';
   return (
-    <span className={`text-sm font-semibold tabular-nums ${color}`}>
+    <span className={`${large ? 'text-lg' : 'text-sm'} font-bold tabular-nums ${color}`}>
       J−{days}
     </span>
   );
@@ -49,27 +53,18 @@ export function DeadlineCard() {
   const paperDays = daysUntil(DATES_LIMITES.papier.date);
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden mb-6">
-      {/* En-tête */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-navy/5 border-b border-gray-100">
-        <Calendar size={16} className="text-navy" />
-        <span className="text-sm font-semibold text-navy uppercase tracking-wider">
-          Dates limites — Déclaration {DATES_LIMITES.anneeDeclaration}
-        </span>
-      </div>
+    <div className="bg-white">
+      <div className="px-4 pt-4 pb-2 space-y-2">
 
-      <div className="px-4 py-3 space-y-1">
-        {/* Ligne papier */}
-        <div className="flex items-center justify-between py-2.5 border-b border-gray-100">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <span className="flex-shrink-0 text-sm px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-              📄
-            </span>
+        {/* Déclaration papier */}
+        <div className="flex items-center justify-between px-3 py-3 bg-gray-50 rounded-xl border border-gray-100">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="text-lg flex-shrink-0">📄</span>
             <div className="min-w-0">
               <p className="text-sm font-semibold text-gray-700 truncate">
                 {DATES_LIMITES.papier.label}
               </p>
-              <p className="text-xs text-gray-500 truncate">
+              <p className="text-xs text-gray-400 truncate">
                 {DATES_LIMITES.papier.departements}
               </p>
             </div>
@@ -80,7 +75,7 @@ export function DeadlineCard() {
           </div>
         </div>
 
-        {/* Lignes internet par zone */}
+        {/* Zones internet */}
         {DATES_LIMITES.internet.map((zone) => {
           const days = daysUntil(zone.date);
           const isActive = activeZone === zone.zone;
@@ -88,14 +83,18 @@ export function DeadlineCard() {
           return (
             <div
               key={zone.zone}
-              className={`flex items-center justify-between py-2.5 rounded-xl px-2 -mx-2 transition-colors ${
-                isActive ? 'bg-navy/5 ring-1 ring-navy/20' : ''
+              className={`flex items-center justify-between px-3 py-3 rounded-xl border transition-colors ${
+                isActive
+                  ? 'bg-navy/5 border-navy/20'
+                  : 'bg-gray-50 border-gray-100'
               }`}
             >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <span className={`flex-shrink-0 text-sm font-bold w-7 h-7 rounded-full flex items-center justify-center ${
-                  isActive ? 'bg-navy text-white' : 'bg-gray-100 text-gray-600'
-                }`}>
+              <div className="flex items-center gap-3 min-w-0">
+                <span
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    isActive ? 'bg-navy text-white' : 'bg-gray-200 text-gray-600'
+                  }`}
+                >
                   {zone.zone}
                 </span>
                 <div className="min-w-0">
@@ -111,7 +110,7 @@ export function DeadlineCard() {
                 <p className={`text-sm font-bold ${isActive ? 'text-navy' : 'text-gray-700'}`}>
                   {zone.dateLabel}
                 </p>
-                <CountdownBadge days={days} />
+                <CountdownBadge days={days} large={isActive} />
               </div>
             </div>
           );
@@ -119,7 +118,7 @@ export function DeadlineCard() {
       </div>
 
       {/* Chercher mon département */}
-      <div className="px-4 pb-3">
+      <div className="px-4 pb-3 pt-1">
         <div className="relative">
           <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
@@ -136,9 +135,16 @@ export function DeadlineCard() {
         )}
       </div>
 
-      {/* Note source */}
       <p className="text-xs text-gray-400 px-4 pb-3">
-        {DATES_LIMITES.note}
+        Dates officielles · Source :{' '}
+        <a
+          href="https://www.info.gouv.fr/actualite/impot-2026-quelles-nouveautes-pour-la-declaration-des-revenus-2025#:~:text=19%20mai%20%3A%20date%20limite%20de,numérotés%20de%2020%20à%2054"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-navy transition-colors"
+        >
+          info.gouv.fr
+        </a>
       </p>
     </div>
   );
