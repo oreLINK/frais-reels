@@ -18,8 +18,10 @@
 | Lucide React | — | Icônes |
 | Google Fonts | — | DM Sans (corps) + Merriweather (titres) |
 | gh-pages | — | Déploiement manuel (fallback) |
+| GoatCounter | — | Analytics de visites — zéro cookie, zéro donnée personnelle |
 
 Aucun backend. Aucun cookie. Aucun `localStorage`. Tout calcul dans le navigateur.
+Les analytics GoatCounter sont anonymisées et ne concernent que le trafic du site (pages vues, référents, pays) — sans aucun lien avec les données fiscales saisies par l'utilisateur.
 
 ---
 
@@ -115,6 +117,22 @@ npm run preview
 npm run deploy
 # → build + push dist/ sur la branche gh-pages
 ```
+
+---
+
+## Analytics (GoatCounter)
+
+Le site utilise [GoatCounter](https://www.goatcounter.com) pour mesurer l'audience — sans cookie, sans donnée personnelle, sans bannière RGPD.
+
+**Dashboard** : `https://frais-reels.goatcounter.com`
+
+**Ce qui est mesuré :**
+- Visites de la landing page (`/frais-reels/`)
+- Passages à la checklist (`/frais-reels/checklist`)
+- Entrées dans le simulateur (`/frais-reels/simulator`)
+- Référents, pays, navigateurs
+
+**Implémentation :** un tag `<script>` dans `index.html` + un `useEffect` dans `App.jsx` qui appelle `window.goatcounter.count()` à chaque changement d'écran. Le guard `?.count` rend l'appel no-op si le script est bloqué (bloqueur de pub, mode offline).
 
 ---
 
