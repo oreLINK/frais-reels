@@ -214,6 +214,27 @@ const REFERENCES = {
     chemin: 'impots.gouv.fr → Formulaires → 2042 → Page 3 → Section « Traitements et salaires » → Cases 1AK à 1DK',
     dateConsultation: '2026-04-15',
   },
+
+  // --------------------------------------------------------------------------
+  // SANCTIONS – DÉCLARATION TARDIVE OU ABSENCE DE DÉCLARATION
+  // --------------------------------------------------------------------------
+  sanctions_retard_declaration: {
+    texte: 'Code Général des Impôts',
+    article: 'Article 1728',
+    citation: 'Le défaut de production dans les délais prescrits d\'une déclaration ou d\'un acte entraîne l\'application, sur le montant des droits mis à la charge du contribuable, d\'une majoration de : a. 10 % en l\'absence de mise en demeure ou en cas de dépôt de la déclaration dans les trente jours suivant la réception d\'une mise en demeure ; b. 40 % lorsque la déclaration n\'a pas été déposée dans les trente jours suivant la réception d\'une mise en demeure.',
+    url: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006303356',
+    chemin: 'Légifrance → CGI → Partie législative → Titre IV → Chapitre I → Section I → Article 1728',
+    dateConsultation: '2026-04-15',
+  },
+
+  interets_retard: {
+    texte: 'Code Général des Impôts',
+    article: 'Article 1727, I',
+    citation: 'Toute créance de nature fiscale [...] qui n\'a pas été acquittée dans le délai légal donne lieu au versement d\'un intérêt de retard. [...] Le taux de l\'intérêt de retard est de 0,20 % par mois.',
+    url: 'https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000041471645',
+    chemin: 'Légifrance → CGI → Partie législative → Titre IV → Chapitre I → Article 1727',
+    dateConsultation: '2026-04-15',
+  },
 };
 
 export { REFERENCES };
