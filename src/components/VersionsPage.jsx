@@ -1,6 +1,6 @@
 import { ArrowLeft, Tag } from 'lucide-react';
 
-const VERSION = '2026.4.1';
+import { APP_VERSION as VERSION } from '../config/version';
 
 const FEATURES = [
   {
