@@ -24,8 +24,13 @@ export function calcAbattement10(sni) {
 // =============================================================================
 // CALCUL BARÈME KILOMÉTRIQUE
 // =============================================================================
-export function calcBaremeKm(typeVehicule, puissance, distanceAller, joursAn, estElectrique) {
-  const distanceAnnuelle = distanceAller * 2 * joursAn;
+export function calcBaremeKm(typeVehicule, puissance, distanceAller, joursAn, estElectrique, justifDistance40 = false) {
+  // Si distance > 40 km sans justification de circonstances particulières,
+  // seuls les 40 premiers km sont légalement déductibles (CGI art. 83, 3° al. 7).
+  const distanceEffective = distanceAller > LIMITE_DISTANCE_ALLER_KM.valeur && !justifDistance40
+    ? LIMITE_DISTANCE_ALLER_KM.valeur
+    : distanceAller;
+  const distanceAnnuelle = distanceEffective * 2 * joursAn;
   let taux = 1;
   if (estElectrique) taux *= (1 + MAJORATION_ELECTRIQUE.taux);
 
@@ -45,14 +50,19 @@ export function calcBaremeKm(typeVehicule, puissance, distanceAller, joursAn, es
   montantKm *= taux;
 
   const alerteDistance = distanceAller > LIMITE_DISTANCE_ALLER_KM.valeur;
-  const messageAlerte = alerteDistance
-    ? `Distance > ${LIMITE_DISTANCE_ALLER_KM.valeur} km : justification requise`
-    : '';
+  const distancePlafonnee = alerteDistance && !justifDistance40;
+  const messageAlerte = distancePlafonnee
+    ? `Distance plafonnée à ${LIMITE_DISTANCE_ALLER_KM.valeur} km — justification de circonstances particulières requise pour déduire la totalité`
+    : alerteDistance
+      ? `Distance > ${LIMITE_DISTANCE_ALLER_KM.valeur} km : circonstances particulières attestées`
+      : '';
 
   return {
     distanceAnnuelle,
+    distanceEffective,
     montantKm: Math.round(montantKm),
     alerteDistance,
+    distancePlafonnee,
     messageAlerte,
   };
 }
@@ -61,13 +71,9 @@ export function calcBaremeKm(typeVehicule, puissance, distanceAller, joursAn, es
 // CALCUL REPAS
 // =============================================================================
 export function calcRepas(typeRepas, coutRepas, joursRepas, aTicketResto = false, partPatronaleAnnuelle = 0) {
-  let deductionBrute;
-
-  if (typeRepas === 'cantine') {
-    deductionBrute = REPAS.plafondDeduction;
-  } else {
-    deductionBrute = Math.min(coutRepas, REPAS.plafondExcessif) - REPAS.forfaitDomicile;
-  }
+  // Règle légale identique pour cantine et restaurant :
+  // déduction = min(coût réel, plafond excessif) − forfait repas domicile
+  const deductionBrute = Math.min(coutRepas, REPAS.plafondExcessif) - REPAS.forfaitDomicile;
 
   // Déduction de la part patronale des tickets restaurant (par jour)
   const partPatronaleJour = joursRepas > 0 ? partPatronaleAnnuelle / joursRepas : 0;
@@ -128,7 +134,8 @@ export function calcMateriel(articlesPlus500, totalMoins500, abonnements) {
 export function calcSynthese(state) {
   const transport = calcBaremeKm(
     state.typeVehicule, state.puissance,
-    state.distanceAller, state.joursTravailSite, state.estElectrique
+    state.distanceAller, state.joursTravailSite, state.estElectrique,
+    state.justifDistance40
   );
   const totalTransport = transport.montantKm + state.peages + state.parking;
 

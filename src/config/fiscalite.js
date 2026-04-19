@@ -37,7 +37,7 @@ const BAREME_KM = {
   moto: {
     '1-2CV': { seuil1: 3000, seuil2: 6000, tranches: [0.395, 0.099, 891,  0.248] },
     '3-5CV': { seuil1: 3000, seuil2: 6000, tranches: [0.468, 0.082, 1158, 0.275] },
-    '5CV+':  { seuil1: 3000, seuil2: 6000, tranches: [0.078, 0.075, 1583, 0.343] },
+    '5CV+':  { seuil1: 3000, seuil2: 6000, tranches: [0.606, 0.079, 1583, 0.343] },
   },
   cyclo: {
     unique: { seuil1: 3000, seuil2: 6000, tranches: [0.315, 0.079, 711, 0.198] },
@@ -73,7 +73,7 @@ const REPAS = {
 const TELETRAVAIL = {
   forfaitJour: 2.70,
   forfaitMois: 59.40,
-  forfaitAn: 712.80,
+  forfaitAn: 626.40,  // 2,70 € × 232 jours ouvrés max – source : service-public.gouv.fr 2025
   ref: ['teletravail_forfait', 'teletravail_local_bofip'],
 };
 

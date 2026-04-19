@@ -63,11 +63,11 @@ const REFERENCES = {
   },
 
   bareme_km_arrete: {
-    texte: 'Arrêté du 27 mars 2023 fixant le barème forfaitaire',
-    article: 'Arrêté du 27 mars 2023 (JO du 7 avril 2023)',
-    citation: 'Barème non revalorisé depuis 2023, reconduit pour les revenus 2024 et 2025.',
-    url: 'https://bofip.impots.gouv.fr/bofip/2095-PGP.html/identifiant=BOI-BAREME-000003-20260218',
-    chemin: 'BOFiP → Barèmes → BOI-BAREME-000001 (voitures) et BOI-BAREME-000002 (2-roues)',
+    texte: 'Arrêté du 27 mars 2023 fixant le barème forfaitaire (JO du 7 avril 2023)',
+    article: 'Arrêté ministériel – barème kilométrique voitures (BOI-BAREME-000001) et deux-roues (BOI-BAREME-000002)',
+    citation: 'Barème non revalorisé depuis 2023, reconduit à l\'identique pour les revenus 2024 et 2025. Confirmé par service-public.gouv.fr : « comme en 2025, les barèmes kilométriques ne sont pas revalorisés ».',
+    url: 'https://www.service-public.gouv.fr/particuliers/actualites/A14686',
+    chemin: 'service-public.gouv.fr → Actualités → Barèmes kilométriques 2026 · BOFiP : BOI-BAREME-000001 (automobiles) et BOI-BAREME-000002 (deux-roues motorisés)',
     dateConsultation: '2026-04-15',
   },
 
@@ -117,20 +117,20 @@ const REFERENCES = {
   // FRAIS DE REPAS
   // --------------------------------------------------------------------------
   repas_forfait_domicile: {
-    texte: 'BOFiP',
-    article: 'BOI-BNC-BASE-40-60-60 § 20',
-    citation: 'Pour l\'année 2025, la valeur du repas pris au domicile est évaluée forfaitairement à 5,45 € toutes taxes comprises.',
-    url: 'https://bofip.impots.gouv.fr/bofip/4628-PGP.html/identifiant=BOI-BNC-BASE-40-60-60-20250219',
-    chemin: 'BOFiP → BNC → Base d\'imposition → Dépenses → Frais divers de gestion → § 20',
+    texte: 'impots.gouv.fr – Fiche pratique salariés + BOFiP BOI-RSA-BASE-30-50-30-20 § 550',
+    article: 'Valeur du repas pris au foyer – revenus 2025',
+    citation: 'Pour l\'imposition des revenus 2025, la valeur d\'un repas pris au foyer est de 5,45 €. Le montant déductible est égal à la différence entre le prix effectivement payé et cette valeur forfaitaire.',
+    url: 'https://www.impots.gouv.fr/particulier/frais-de-repas',
+    chemin: 'impots.gouv.fr → Particulier → Frais de repas · Pour les montants annuels : BOFiP → BOI-BAREME-000014',
     dateConsultation: '2026-04-15',
   },
 
   repas_plafond: {
-    texte: 'BOFiP',
-    article: 'BOI-BNC-BASE-40-60-60 § 30',
-    citation: 'Cette limite au-delà de laquelle la dépense est considérée comme excessive [...] est de 21,10 € pour 2025.',
-    url: 'https://bofip.impots.gouv.fr/bofip/4628-PGP.html/identifiant=BOI-BNC-BASE-40-60-60-20250219',
-    chemin: 'BOFiP → BNC → Base d\'imposition → Dépenses → Frais divers de gestion → § 30',
+    texte: 'BOFiP – doctrine administrative appliquée aux salariés',
+    article: 'BOI-BNC-BASE-40-60-60 § 30 (valeur de référence) + impots.gouv.fr frais de repas',
+    citation: 'Le seuil au-delà duquel une dépense de repas est réputée excessive est fixé à 21,10 € pour 2025. Ce montant, issu de la doctrine BNC, est retenu en pratique par l\'administration comme plafond de raisonnabilité pour les salariés en frais réels.',
+    url: 'https://www.impots.gouv.fr/particulier/frais-de-repas',
+    chemin: 'impots.gouv.fr → Particulier → Frais de repas (référence pratique) · Doctrine : BOFiP → BOI-BNC-BASE-40-60-60 § 30',
     dateConsultation: '2026-04-15',
   },
 
@@ -156,20 +156,20 @@ const REFERENCES = {
   // TÉLÉTRAVAIL & LOGEMENT
   // --------------------------------------------------------------------------
   teletravail_forfait: {
-    texte: 'impots.gouv.fr – Fiche pratique',
-    article: 'FAQ « Comment déclarer mes frais de télétravail »',
-    citation: 'Vous pouvez déduire des frais professionnels liés au télétravail à hauteur de 2,70 € par jour de télétravail (59,40 € par mois et 712,80 € pour l\'année).',
+    texte: 'impots.gouv.fr – FAQ + service-public.gouv.fr',
+    article: 'FAQ « Comment déclarer mes frais de télétravail » – revenus 2025',
+    citation: 'Vous pouvez déduire des frais professionnels liés au télétravail à hauteur de 2,70 € par jour de télétravail (59,40 € par mois, soit 626,40 € pour une année complète). Ce forfait s\'applique uniquement si aucune allocation employeur n\'a été perçue à ce titre.',
     url: 'https://www.impots.gouv.fr/particulier/questions/comment-declarer-mes-frais-engages-au-titre-du-teletravail-domicile-en-2020',
-    chemin: 'impots.gouv.fr → Particulier → Questions → Rechercher « télétravail » → Section « Vous optez pour les frais réels »',
+    chemin: 'impots.gouv.fr → Particulier → Questions → Rechercher « télétravail » → Section « Vous optez pour les frais réels » · Confirmé par service-public.gouv.fr/particuliers/actualites/A14686',
     dateConsultation: '2026-04-15',
   },
 
   teletravail_local_bofip: {
     texte: 'BOFiP',
-    article: 'BOI-RSA-BASE-30-50-30-30',
-    citation: 'Les charges fixes (loyer, taxe d\'habitation, électricité, chauffage) se calculent au prorata de la surface dédiée au télétravail par rapport à la superficie totale du logement.',
-    url: 'https://bofip.impots.gouv.fr/bofip/2161-PGP.html/identifiant=BOI-RSA-BASE-30-50-30-20-20170224',
-    chemin: 'BOFiP → RSA → Base d\'imposition → Charges déductibles → Frais réels → Frais de local → BOI-RSA-BASE-30-50-30-30',
+    article: 'BOI-RSA-BASE-30-50-30-30 (frais de local professionnel à domicile)',
+    citation: 'Les charges fixes (loyer ou intérêts d\'emprunt, électricité, chauffage, taxe foncière pour les propriétaires) se calculent au prorata de la surface dédiée exclusivement au travail par rapport à la superficie totale du logement. Note : la taxe d\'habitation a été supprimée pour les résidences principales depuis 2023 et n\'est plus déductible à ce titre.',
+    url: 'https://bofip.impots.gouv.fr/bofip/2161-PGP.html/identifiant=BOI-RSA-BASE-30-50-30-30',
+    chemin: 'BOFiP → RSA → Base d\'imposition → Charges déductibles → Frais réels → Section III – Frais de local professionnel → BOI-RSA-BASE-30-50-30-30',
     dateConsultation: '2026-04-15',
   },
 
