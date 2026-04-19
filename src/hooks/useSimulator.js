@@ -13,6 +13,7 @@ const initialState = {
   peages: 0,
   parking: 0,
   justif_transport: false,
+  justifDistance40: false,    // true = circonstances particulières attestées (>40 km)
 
   // Étape 3 – Repas
   typeRepas: 'restaurant',
@@ -68,6 +69,8 @@ function reducer(state, action) {
       return { ...state, parking: action.payload };
     case 'SET_JUSTIF_TRANSPORT':
       return { ...state, justif_transport: action.payload };
+    case 'SET_JUSTIF_DISTANCE_40':
+      return { ...state, justifDistance40: action.payload };
 
     // Étape 3
     case 'SET_TYPE_REPAS':

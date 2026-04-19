@@ -1,7 +1,8 @@
-import { Copy, Download, Check } from 'lucide-react';
+import { Copy, Download, Check, Eye } from 'lucide-react';
 import { useState } from 'react';
 import jsPDF from 'jspdf';
-import { TEXTES, ANNEE_REVENUS, ANNEE_DECLARATION, REPAS, BAREME_KM, MATERIEL } from '../../config/fiscalite';
+import { TEXTES, ANNEE_REVENUS, ANNEE_DECLARATION, REPAS, BAREME_KM, MATERIEL, LIMITE_DISTANCE_ALLER_KM } from '../../config/fiscalite';
+import { APP_VERSION } from '../../config/version';
 
 // ─── Helpers couleurs ──────────────────────────────────────────────────────────
 const C = {
@@ -53,8 +54,8 @@ function buildTexteCopier(state, synthese) {
   return lines.join('\n');
 }
 
-// ─── Génération PDF ────────────────────────────────────────────────────────────
-function generatePDF(state, synthese) {
+// ─── Construction du document PDF (retourne le doc jsPDF) ─────────────────────
+function buildPDF(state, synthese) {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   const {
     recommendation, fraisReelsTotal, abattement10,
@@ -203,6 +204,9 @@ function generatePDF(state, synthese) {
   const dateStr = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
   const timeStr = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   doc.text(`Genere le ${dateStr} a ${timeStr}`, RM, 21, { align: 'right' });
+  doc.setFontSize(7.5);
+  doc.setTextColor(140, 165, 200);
+  doc.text(`v${APP_VERSION}`, LM, 28);
   y = 40;
 
   // ════════════════════════════════════════════════════════════
@@ -250,7 +254,11 @@ function generatePDF(state, synthese) {
   if (state.parking > 0) row('Stationnement annuel', fmt(state.parking));
   if (transport.alerteDistance) {
     sp(1);
-    note(`(!) Distance > ${state.distanceAller} km : justification de circonstances particulieres requise.`, 3, C.amber);
+    if (transport.distancePlafonnee) {
+      note(`(!) Distance saisie : ${state.distanceAller} km — plafonnee a ${LIMITE_DISTANCE_ALLER_KM.valeur} km (pas de justification de circonstances particulieres confirmee). Seuls les ${LIMITE_DISTANCE_ALLER_KM.valeur} premiers km ont ete pris en compte dans le calcul (CGI art. 83, 3e al.).`, 3, [200, 50, 50]);
+    } else {
+      note(`Distance ${state.distanceAller} km > ${LIMITE_DISTANCE_ALLER_KM.valeur} km : circonstances particulieres attestees par le declarant — calcul effectue sur la distance reelle. Conservez les justificatifs correspondants.`, 3, C.amber);
+    }
   }
   subtotalRow('Sous-total transports', fmt(totalTransport), state.justif_transport);
 
@@ -258,16 +266,13 @@ function generatePDF(state, synthese) {
   // 3. REPAS
   // ════════════════════════════════════════════════════════════
   sectionHeader('3 - REPAS');
-  row('Type de repas', state.typeRepas === 'cantine' ? 'Cantine / ticket restaurant' : 'Restaurant / exterieur');
+  row('Type de repas', state.typeRepas === 'cantine' ? 'Cantine d\'entreprise' : 'Restaurant / exterieur');
   row('Jours de repas hors domicile', `${state.joursRepas} j`);
-  if (state.typeRepas === 'restaurant') {
-    row('Cout moyen d\'un repas', fmt(state.coutRepas));
-    row('Plafond reglementaire (depense excessive)', fmt(REPAS.plafondExcessif));
-    const coutPlaf = Math.min(state.coutRepas, REPAS.plafondExcessif);
-    note(`Formule : min(${state.coutRepas} €, ${REPAS.plafondExcessif} €) - ${REPAS.forfaitDomicile} € = ${(coutPlaf - REPAS.forfaitDomicile).toFixed(2)} €/repas`, 5, C.gray);
-  } else {
-    note(`Formule : plafond legal - valeur repas domicile = ${REPAS.plafondDeduction.toFixed(2)} €/repas`, 5, C.gray);
-  }
+  // Meme formule legale pour cantine et restaurant (BOI-RSA-BASE-30-50-30-20 § 550)
+  row(state.typeRepas === 'cantine' ? 'Prix paye a la cantine' : 'Cout moyen d\'un repas', fmt(state.coutRepas));
+  row('Plafond reglementaire (depense excessive)', fmt(REPAS.plafondExcessif));
+  const coutPlaf = Math.min(state.coutRepas, REPAS.plafondExcessif);
+  note(`Formule : min(${state.coutRepas} €, ${REPAS.plafondExcessif} €) - ${REPAS.forfaitDomicile} € = ${(coutPlaf - REPAS.forfaitDomicile).toFixed(2)} €/repas`, 5, C.gray);
   row('Valeur repas domicile deduite (reglementaire)', `- ${fmt(REPAS.forfaitDomicile)}`);
   row('Deduction nette par repas', fmt(repas.deductionUnitaire), { bold: true, valueColor: C.navy });
   if (state.aTicketResto) {
@@ -498,6 +503,16 @@ function generatePDF(state, synthese) {
   }
 
   // ════════════════════════════════════════════════════════════
+  // AVERTISSEMENT ESTIMATION
+  // ════════════════════════════════════════════════════════════
+  sp(4);
+  checkPage();
+  coloredBox([
+    '⚠  ESTIMATION UNIQUEMENT — Ne remplace pas un professionnel',
+    `Ce document est genere automatiquement par un simulateur (v${APP_VERSION}). Il ne constitue pas un avis fiscal et ne remplace pas les conseils d'un expert-comptable ou d'un conseiller fiscal agree. Les calculs sont bases sur les informations saisies et les baremes officiels ${ANNEE_REVENUS}, mais votre situation personnelle peut comporter des specificites non prises en compte. En cas de doute, consultez un professionnel avant de soumettre votre declaration.`,
+  ], [255, 240, 240], [160, 30, 30], [200, 50, 50]);
+
+  // ════════════════════════════════════════════════════════════
   // FOOTER SUR TOUTES LES PAGES
   // ════════════════════════════════════════════════════════════
   const pageCount = doc.getNumberOfPages();
@@ -510,7 +525,19 @@ function generatePDF(state, synthese) {
     doc.text(`Page ${i} / ${pageCount}`, RM, 289, { align: 'right' });
   }
 
-  doc.save(buildFilename());
+  return doc;
+}
+
+// ─── Télécharger le PDF ────────────────────────────────────────────────────────
+function downloadPDF(state, synthese) {
+  buildPDF(state, synthese).save(buildFilename());
+}
+
+// ─── Ouvrir le PDF dans un nouvel onglet ──────────────────────────────────────
+function openPDF(state, synthese) {
+  const blob = buildPDF(state, synthese).output('blob');
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
 }
 
 // ─── Composant React ───────────────────────────────────────────────────────────
@@ -525,7 +552,8 @@ export function ExportBlock({ state, synthese }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className="flex flex-col gap-3 mb-4">
+        {/* 1 — Copier le résumé */}
         <button
           onClick={handleCopy}
           type="button"
@@ -536,13 +564,25 @@ export function ExportBlock({ state, synthese }) {
           {copied ? <Check size={18} /> : <Copy size={18} />}
           {copied ? 'Copié !' : 'Copier le résumé'}
         </button>
+
+        {/* 2 — Générer PDF (aperçu dans un nouvel onglet) */}
         <button
-          onClick={() => generatePDF(state, synthese)}
+          onClick={() => openPDF(state, synthese)}
           type="button"
           className="flex items-center justify-center gap-2 px-4 py-3.5 bg-white border-2 border-navy text-navy rounded-2xl font-semibold text-sm hover:bg-slate-50 transition-all"
         >
+          <Eye size={18} />
+          Générer PDF
+        </button>
+
+        {/* 3 — PDF complet (téléchargement direct) */}
+        <button
+          onClick={() => downloadPDF(state, synthese)}
+          type="button"
+          className="flex items-center justify-center gap-2 px-4 py-3.5 bg-slate-100 border-2 border-slate-200 text-slate-600 rounded-2xl font-semibold text-sm hover:bg-slate-200 transition-all"
+        >
           <Download size={18} />
-          PDF complet
+          PDF complet — Télécharger
         </button>
       </div>
 

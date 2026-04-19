@@ -27,7 +27,8 @@ export function Step2_Deplacements({ state, dispatch, onNext, onPrev }) {
 
   const transport = calcBaremeKm(
     state.typeVehicule, state.puissance,
-    state.distanceAller, state.joursTravailSite, state.estElectrique
+    state.distanceAller, state.joursTravailSite, state.estElectrique,
+    state.justifDistance40
   );
   const totalTransport = transport.montantKm + state.peages + state.parking;
 
@@ -37,6 +38,7 @@ export function Step2_Deplacements({ state, dispatch, onNext, onPrev }) {
     ...(state.typeVehicule !== 'cyclo' ? ['puissance'] : []),
     'electrique',
     'distance',
+    ...(state.distanceAller > LIMITE_DISTANCE_ALLER_KM.valeur ? ['justifDistance40'] : []),
     'jours',
     'peages',
     'parking',
@@ -157,10 +159,7 @@ export function Step2_Deplacements({ state, dispatch, onNext, onPrev }) {
           <button
             key={String(value)}
             type="button"
-            onClick={() => {
-              dispatch({ type: 'SET_ELECTRIQUE', payload: value });
-              goNext();
-            }}
+            onClick={() => dispatch({ type: 'SET_ELECTRIQUE', payload: value })}
             className={`p-4 rounded-2xl border-2 text-center transition-all ${
               state.estElectrique === value
                 ? 'border-navy bg-navy text-white shadow-md'
@@ -227,6 +226,40 @@ export function Step2_Deplacements({ state, dispatch, onNext, onPrev }) {
         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold pointer-events-none">
           km
         </span>
+      </div>
+      <SourceLegale refKeys={LIMITE_DISTANCE_ALLER_KM.ref} />
+    </QuestionCard>
+  );
+
+  // ——— QUESTION : justification distance >40 km ———
+  if (currentQ === 'justifDistance40') return (
+    <QuestionCard
+      {...cardProps}
+      question={`Votre domicile est à ${state.distanceAller} km du travail — pouvez-vous justifier les circonstances particulières ?`}
+      hint={`La loi (CGI art. 83) limite la déduction aux 40 premiers km. Au-delà, vous devez prouver qu'aucun emploi similaire n'existe plus près, ou une contrainte familiale/médicale reconnue. Sans justification, le calcul sera plafonné à ${LIMITE_DISTANCE_ALLER_KM.valeur} km.`}
+    >
+      <div className="grid grid-cols-2 gap-3 mt-2">
+        {[
+          { value: true, label: 'Oui, je peux justifier', icon: '✅', desc: 'Calcul sur la distance réelle' },
+          { value: false, label: 'Non / Je ne sais pas', icon: '⚠️', desc: `Calcul plafonné à ${LIMITE_DISTANCE_ALLER_KM.valeur} km` },
+        ].map(({ value, label, icon, desc }) => (
+          <button
+            key={String(value)}
+            type="button"
+            onClick={() => dispatch({ type: 'SET_JUSTIF_DISTANCE_40', payload: value })}
+            className={`p-4 rounded-2xl border-2 text-center transition-all ${
+              state.justifDistance40 === value
+                ? 'border-navy bg-navy text-white shadow-md'
+                : 'border-gray-200 bg-white hover:border-navy/40'
+            }`}
+          >
+            <div className="text-2xl mb-1">{icon}</div>
+            <div className="text-sm font-semibold">{label}</div>
+            <div className={`text-xs mt-0.5 ${state.justifDistance40 === value ? 'text-blue-200' : 'text-gray-400'}`}>
+              {desc}
+            </div>
+          </button>
+        ))}
       </div>
       <SourceLegale refKeys={LIMITE_DISTANCE_ALLER_KM.ref} />
     </QuestionCard>

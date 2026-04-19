@@ -224,6 +224,14 @@ export function Synthese({ state, onPrev }) {
         </div>
       )}
 
+      {/* ── Avertissement estimation ─────────────────────────────── */}
+      <div className="bg-red-50 border border-danger rounded-2xl p-4 mb-4 flex gap-3">
+        <AlertTriangle className="text-danger flex-shrink-0 mt-0.5" size={18} />
+        <p className="text-xs text-red-700 leading-relaxed">
+          <strong>Ce résultat est une estimation indicative.</strong> Il est calculé sur la base des informations que vous avez saisies et des barèmes fiscaux en vigueur, mais ne constitue pas un conseil fiscal personnalisé. Votre situation peut comporter des spécificités (revenus multiples, situations familiales particulières, etc.) que ce simulateur ne prend pas en compte. Pour toute décision fiscale engageante, consultez un expert-comptable ou un conseiller fiscal agréé.
+        </p>
+      </div>
+
       {/* ── Export ───────────────────────────────────────────────── */}
       <ExportBlock state={state} synthese={synthese} />
     </div>

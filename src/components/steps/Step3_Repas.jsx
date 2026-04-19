@@ -16,7 +16,7 @@ export function Step3_Repas({ state, dispatch, onNext, onPrev }) {
 
   const questions = [
     'typeRepas',
-    ...(state.typeRepas === 'restaurant' ? ['coutRepas'] : []),
+    'coutRepas',   // toujours demandé : la règle légale est identique pour cantine et restaurant
     'joursRepas',
     'ticketsResto',
     ...(state.aTicketResto ? ['partPatronale'] : []),
@@ -81,12 +81,12 @@ export function Step3_Repas({ state, dispatch, onNext, onPrev }) {
       <div className="grid grid-cols-2 gap-3 mt-2">
         {[
           { value: 'restaurant', label: 'Restaurant', icon: '🍽️', desc: 'Déduction du coût réel' },
-          { value: 'cantine', label: 'Cantine', icon: '🏢', desc: 'Forfait plafonné' },
+          { value: 'cantine', label: 'Cantine', icon: '🏢', desc: 'Prix réel − forfait domicile' },
         ].map(({ value, label, icon, desc }) => (
           <button
             key={value}
             type="button"
-            onClick={() => { dispatch({ type: 'SET_TYPE_REPAS', payload: value }); goNext(); }}
+            onClick={() => dispatch({ type: 'SET_TYPE_REPAS', payload: value })}
             className={`p-4 rounded-2xl border-2 text-center transition-all ${
               state.typeRepas === value
                 ? 'border-navy bg-navy text-white shadow-md'
@@ -104,12 +104,16 @@ export function Step3_Repas({ state, dispatch, onNext, onPrev }) {
     </QuestionCard>
   );
 
-  // ——— QUESTION : coût moyen repas (restaurant uniquement) ———
+  // ——— QUESTION : coût moyen repas (cantine ou restaurant) ———
   if (currentQ === 'coutRepas') return (
     <QuestionCard
       {...cardProps}
-      question="Quel est le coût moyen d'un repas ?"
-      hint={`Montant réellement payé, ticket ou facture à l'appui. Déduction plafonnée à ${REPAS.plafondExcessif} € (coût excessif au-delà).`}
+      question={state.typeRepas === 'cantine'
+        ? 'Quel est le prix moyen que vous payez à la cantine ?'
+        : 'Quel est le coût moyen d\'un repas au restaurant ?'}
+      hint={state.typeRepas === 'cantine'
+        ? `Prix effectivement débité (part salariale après subvention employeur). La déduction légale est : prix payé − ${REPAS.forfaitDomicile} € (forfait repas domicile), dans la limite de ${REPAS.plafondExcessif} €.`
+        : `Montant réellement payé, ticket ou facture à l'appui. Déduction plafonnée à ${REPAS.plafondExcessif} € (coût excessif au-delà).`}
       preview={
         state.coutRepas > 0 && (
           <div>
@@ -120,7 +124,7 @@ export function Step3_Repas({ state, dispatch, onNext, onPrev }) {
               {repas.deductionUnitaire.toFixed(2)} €
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              min({state.coutRepas} €, {REPAS.plafondExcessif} €) − {REPAS.forfaitDomicile} € (forfait domicile)
+              min({state.coutRepas} €, {REPAS.plafondExcessif} €) − {REPAS.forfaitDomicile} € (forfait repas domicile)
             </p>
           </div>
         )
@@ -214,10 +218,7 @@ export function Step3_Repas({ state, dispatch, onNext, onPrev }) {
           <button
             key={String(value)}
             type="button"
-            onClick={() => {
-              dispatch({ type: 'SET_A_TICKET_RESTO', payload: value });
-              goNext();
-            }}
+            onClick={() => dispatch({ type: 'SET_A_TICKET_RESTO', payload: value })}
             className={`p-4 rounded-2xl border-2 text-center transition-all ${
               state.aTicketResto === value
                 ? 'border-navy bg-navy text-white shadow-md'
