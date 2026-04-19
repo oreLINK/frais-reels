@@ -40,7 +40,8 @@ const FEATURES = [
   {
     category: "Simulateur — Étape 3 · Repas",
     items: [
-      "Coût réel du repas et nombre de jours hors domicile",
+      "Coût réel du repas (restaurant ou cantine) et nombre de jours hors domicile",
+      "Formule unifiée : min(coût réel, 21,10 €) − 5,45 € (forfait repas domicile)",
       "Déduction de la part ticket restaurant patronale",
       "Plafond légal à 21,10 € / repas et valeur domicile 5,45 €",
     ],
@@ -66,8 +67,10 @@ const FEATURES = [
       "3 scénarios de recommandation : abattement forfaitaire, frais réels, prudence (dossier incomplet)",
       "Jauge comparative visuelle abattement vs frais réels",
       "Détail des déductions par catégorie",
-      "Export PDF complet horodaté",
+      "Avertissement : résultat estimatif uniquement, consulter un expert-comptable ou l'administration fiscale",
       "Copie du résumé en texte plain-text",
+      "Prévisualisation du PDF dans le navigateur (nouvelle fenêtre)",
+      "Export PDF complet horodaté avec version et mentions légales",
       "Sources légales dépliables (Légifrance, BOFiP, impots.gouv.fr)",
     ],
   },
